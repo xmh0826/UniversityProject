@@ -1,8 +1,12 @@
 import http from '@/utils/http'
 
-export const getBannerAPI = ()=> {
+export const getBannerAPI = (distributionSite = 1)=> {
+  // 默认为1 、 商品为2
   return http({
-    url:'/home/banner'
+    url:'/home/banner',
+    params:{
+      distributionSite
+    }
   })
 } 
 

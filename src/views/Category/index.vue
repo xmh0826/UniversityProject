@@ -2,6 +2,7 @@
 import { getCategoryAPI} from '@/apis/category'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { getBannerAPI } from '@/apis/home'
 
 // 获取数据
 const categoryList = ref({})
@@ -11,8 +12,16 @@ const getCategoryData = async () => {
   categoryList.value = res.result
 }
 
+// 获取轮播图数据
+const bannerList = ref([])
+const getBannerData = async () => {
+  const res = await getBannerAPI(2)
+  bannerList.value = res.result
+}
+
 onMounted(() => {
-  getCategoryData()
+  getCategoryData(),
+  getBannerData()
 })
 
 </script>
@@ -27,6 +36,14 @@ onMounted(() => {
           <el-breadcrumb-item>{{ categoryList.name }}</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
+      <!-- 轮播图 -->
+      <div class="home-banner">
+    <el-carousel height="500px">
+      <el-carousel-item v-for="item in bannerList" :key="item">
+        <img :src="item.imgUrl" alt="">
+      </el-carousel-item>
+    </el-carousel>
+  </div>
     </div>
   </div>
 </template>
@@ -108,6 +125,20 @@ onMounted(() => {
 
   .bread-container {
     padding: 25px 0;
+  }
+}
+
+.home-banner {
+  width: 1240px;
+  height: 500px;
+  // position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 98;
+
+  img {
+    width: 100%;
+    height: 500px;
   }
 }
 </style>
