@@ -11,7 +11,7 @@ import { onMounted } from 'vue'
 // 得到实例对象
 const categoryStore = useCategoryStore()
 
-// categoryStore.getCategoryData()
+// categoryStore.getCategoryData() 直接写也可以
 onMounted(() => {
   categoryStore.getCategoryData()
 })
