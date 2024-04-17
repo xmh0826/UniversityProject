@@ -1,7 +1,7 @@
 // axios 的基础封装
 import axios from "axios";
 
-const httpInstance = axios.create({
+const http = axios.create({
   // 基地址
   baseURL:'http://pcapi-xiaotuxian-front-devtest.itheima.net',
   // 超时时间
@@ -10,13 +10,13 @@ const httpInstance = axios.create({
 
 // 拦截器 (axios 官方文档)
 // axios请求拦截器
-httpInstance.interceptors.request.use(config => {
+http.interceptors.request.use(config => {
   return config
 }, e => Promise.reject(e))
 
 // axios响应式拦截器
-httpInstance.interceptors.response.use(res => res.data, e => {
+http.interceptors.response.use(res => res.data, e => {
   return Promise.reject(e)
 })
 
-export default httpInstance
+export default http
