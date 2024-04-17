@@ -1,14 +1,15 @@
 <script setup>
 import { getCategoryAPI} from '@/apis/category'
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 import { getBannerAPI } from '@/apis/home'
+import GoodsItem from '@/views/Home/components/GoodsItem.vue'
 
 // 获取数据
 const categoryList = ref({})
 const route = useRoute()
-const getCategoryData = async () => {
-  const res = await getCategoryAPI(route.params.id)
+const getCategoryData = async (id = route.params.id) => {
+  const res = await getCategoryAPI(id)
   categoryList.value = res.result
 }
 
@@ -22,6 +23,12 @@ const getBannerData = async () => {
 onMounted(() => {
   getCategoryData(),
   getBannerData()
+})
+
+// 目标：路由参数变化的时候 可以把分类数据接口重新发送 
+// to:表示即将要进入的目标路由对象
+onBeforeRouteUpdate((to) => {
+  getCategoryData(to.params.id)
 })
 
 </script>
@@ -44,6 +51,26 @@ onMounted(() => {
       </el-carousel-item>
     </el-carousel>
   </div>
+<!-- 全部分类 -->
+  <div class="sub-list">
+  <h3>全部分类</h3>
+  <ul>
+    <li v-for="i in categoryList.children" :key="i.id">
+      <RouterLink to="/">
+        <img :src="i.picture" />
+        <p>{{ i.name }}</p>
+      </RouterLink>
+    </li>
+  </ul>
+</div>
+<div class="ref-goods" v-for="item in categoryList.children" :key="item.id">
+  <div class="head">
+    <h3>- {{ item.name }}-</h3>
+  </div>
+  <div class="body">
+    <GoodsItem v-for="goods in item.goods" :goods="goods" :key="goods.id" />
+  </div>
+</div>
     </div>
   </div>
 </template>
