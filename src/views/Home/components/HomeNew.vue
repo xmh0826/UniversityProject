@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import HomePanel from './HomePanel.vue'
-import { getFindNewAPI,getHotAPI } from '@/apis/home';
+import { getFindNewAPI} from '@/apis/home';
 
 // 获取数据
 const findNewlist = ref([])
@@ -9,15 +9,9 @@ const getFindNewData = async () => {
   const res = await getFindNewAPI()
   findNewlist.value = res. result
 }
-const hotList = ref([])
-const getHotData = async () => {
-  const res = await getHotAPI()
-  hotList.value = res. result
-}
 
 onMounted(() => {
   getFindNewData()
-  getHotData()
 })
 </script>
 
@@ -26,7 +20,7 @@ onMounted(() => {
       <!-- 下面是插槽主体内容模版 -->
   <ul class="goods-list">
     <li v-for="item in findNewlist" :key="item.id">
-      <RouterLink to="/">
+      <RouterLink :to="`/detail/${item.id}`">
         <img :src="item.picture" alt="" />
         <p class="name">{{ item.title }}</p>
         <p class="price">&yen;{{ item.price }}</p>
