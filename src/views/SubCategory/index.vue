@@ -22,11 +22,33 @@ const reqData = ref({
   pageSize:20,
   sortField:'publishTime'
 })
-
 const getGoodsData = async () => {
   // 接收返回
   const res = await postSubCategoryAPI(reqData.value)
   goodsList.value = res.result.items
+}
+
+// 加载更多
+const disabled = ref(false)
+const load = async () => {
+  // 获取下一页数据
+  reqData.value.page++ 
+  const res = await postSubCategoryAPI(reqData.value)
+  // 展开运算符拼接,先展开旧数据，后展开新数据
+   goodsList.value = [...goodsList.value,...res.result.items]
+  //  判断是否加载完毕 , 加载完毕则停止监听
+  if(res.value.items.length === 0){
+    disabled.value = true
+  }
+
+} 
+
+// tab切换回调
+const onTabChange = () => {
+  // 初始化页数
+  reqData.value.page = 1
+  disabled.value = false
+  getGoodsData()
 }
 
 onMounted(() => {
@@ -50,14 +72,15 @@ onMounted(() => {
       </el-breadcrumb>
     </div>
     <div class="sub-container">
-      <el-tabs>
+      <!-- 会自动将子组件中的name存储到父组件的v-model中 -->
+      <el-tabs v-model="reqData.sortField" @tab-change="onTabChange">
         <el-tab-pane label="最新商品" name="publishTime"></el-tab-pane>
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>
       </el-tabs>
-      <div class="body">
+      <div class="body" v-infinite-scroll="load">
          <!-- 商品列表-->
-         <GoodsItem v-for=" goods in goodsList" :goods="goods" :key="goods.id"></GoodsItem>
+         <GoodsItem v-for=" goods in goodsList" :goods="goods" :key="goods.id" :infinite-scroll-disabled="disabled"></GoodsItem>
       </div>
     </div>
   </div>
