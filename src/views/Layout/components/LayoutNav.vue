@@ -33,6 +33,7 @@
 .app-topnav {
   background: #333;
   ul {
+    //  display: flex; 创建弹性布局
     display: flex;
     height: 53px;
     justify-content: flex-end;
