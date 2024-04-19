@@ -1,6 +1,9 @@
 <script setup>
+import { loginAPI } from '@/apis/user';
 import { ref } from 'vue';
-
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/el-message.css'
+import { useRouter } from 'vue-router'
 
 
 // 表单校验 （账号名 密码）
@@ -37,6 +40,29 @@ const rules = ref({
   ]
 })
 
+// 3、获取 form 实例 做统一校验
+const formRef = ref(null) 
+const router = useRouter()  // 不带 r 传参 ，带 r 传方法
+const doLogin = () => {
+  // 调用实例方法
+  formRef.value.validate(async (valid) => {
+    //  valid: 所有表单通过校验时 才为true
+    console.log(valid)
+    // 如果为 true 则执行登录逻辑
+    if(valid){
+      // TODO LOGIN
+      const res = await loginAPI(form.value)
+      // 1、提示用户
+      ElMessage({
+        type:'success',
+        message:'登陆成功！'
+      })
+      // 2、跳转至首页
+      router.replace({path:'/'})
+    }
+  })
+}
+
 </script>
 
 
@@ -61,7 +87,7 @@ const rules = ref({
         </nav>
         <div class="account-box">
           <div class="form">
-            <el-form :model="form" :rules="rules" label-position="right" label-width="60px"
+            <el-form ref="formRef" :model="form" :rules="rules" label-position="right" label-width="60px"
               status-icon>
               <el-form-item  prop="account" label="账户">
                 <el-input v-model="form.account"/>
@@ -74,7 +100,7 @@ const rules = ref({
                   我已同意隐私条款和服务条款
                 </el-checkbox>
               </el-form-item>
-              <el-button size="large" class="subBtn">点击登录</el-button>
+              <el-button size="large" class="subBtn" @click="doLogin">点击登录</el-button>
             </el-form>
           </div>
         </div>
