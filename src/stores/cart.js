@@ -45,13 +45,25 @@ export const useCartStore = defineStore('cart',() => {
     goods.selected = !goods.selected
   }
 
+  // 是否全选
+  const isAll = computed(() => {
+    return cartList.value.every((item) => item.selected)
+  })
+
+  // 全选功能
+  const allCheck = (selected) => {
+    cartList.value.forEach((item) =>item.selected = selected)
+  }
+
   return {
     cartList,
     addCart,
     delCart,
     allCount,
     totalPrice,
-    singleCheck
+    singleCheck,
+    isAll,
+    allCheck
   }
 },{
   persist:true   //保存至本地 （需安装pinia数据持久化插件）
