@@ -5,6 +5,7 @@ import { ref } from "vue";
 export const useCartStore = defineStore('cart',() => {
   // 1、 定义state - cartList
   const cartList = ref([])
+
   // 2、 定义action - addCart
   const addCart = (goods) => {
     // 添加购物车操作
@@ -20,10 +21,18 @@ export const useCartStore = defineStore('cart',() => {
       cartList.value.push(goods)
     }
   }
+  // delCart
+  const delCart = (skuId) => {
+    // 思路： 方法1、找到要删除项的下标值 - splice方法
+    const delIndex = cartList.value.findIndex((item) => item.skuId === skuId)
+    cartList.value.splice(delIndex,1)
+    //       方法2、 使用数组的过滤方法 - filter
+  }
 
   return {
     cartList,
-    addCart
+    addCart,
+    delCart
   }
 },{
   persist:true   //保存至本地 （需安装pinia数据持久化插件）
