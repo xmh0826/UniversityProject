@@ -2,6 +2,7 @@
 import axios from "axios";
 import { ElMessage } from 'element-plus'
 import { useUserStore } from "@/stores/user";
+import router from "@/router";
 
 const http = axios.create({
   // 基地址
@@ -24,6 +25,16 @@ http.interceptors.request.use(config => {
 
 // axios响应式拦截器
 http.interceptors.response.use(res => res.data, err => {
+
+  //  401 token 失效处理
+    const userStore = useUserStore()
+  // 1、清除本地用户数据
+  // 2、跳转至登录页
+  if(err.response.status === 401){
+    userStore.clearUserInfo()
+    router.replace({path:'/login'})
+  }
+
   // 统一错误提示
   ElMessage({
     type:'error',
