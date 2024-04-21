@@ -1,7 +1,10 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { getOrderAPI } from '@/apis/pay';
+import { getOrderAPI } from '@/apis/pay'
+import { useCountDown } from '@/composables/useCountDown';
+
+const { formatTime,state }= useCountDown()
 
 // 获取订单数据
 const route = useRoute()
@@ -9,6 +12,8 @@ const payInfo = ref({})
 const getPayInfoData = async () => {
   const res = await getOrderAPI(route.query.id)
   payInfo.value = res.result
+  // 初始化倒计时秒数
+  state(res.result.countdown)
 } 
 onMounted(() => getPayInfoData())
 
