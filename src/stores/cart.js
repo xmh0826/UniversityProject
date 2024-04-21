@@ -53,8 +53,14 @@ export const useCartStore = defineStore('cart',() => {
           const delIndex = cartList.value.findIndex((item) => item.skuId === skuId)
           cartList.value.splice(delIndex,1)
     //       方法2、 使用数组的过滤方法 - filter
-  }
     }
+  }
+
+  // 清除购物车
+  const clearCart = () => {
+    cartList.value = []
+  }
+    
 
 
   // 计算属性
@@ -101,7 +107,8 @@ export const useCartStore = defineStore('cart',() => {
     isAll,
     allCheck,
     selectedCount,
-    selectedPrice
+    selectedPrice,
+    clearCart
   }
 },{
   persist:true   //保存至本地 （需安装pinia数据持久化插件）
