@@ -1,13 +1,28 @@
 // 封装购物车模块
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
+import { useUserStore } from "./user";
+import { findNewCartListAPI,postInsertCartAPI } from "@/apis/cart";
 
 export const useCartStore = defineStore('cart',() => {
+  const userStore = useUserStore()
+
   // 1、 定义state - cartList
   const cartList = ref([])
 
+  // 判断是否登录
+  const isLogin = computed(() => userStore.userInfo.token)
+  
   // 2、 定义action - addCart
-  const addCart = (goods) => {
+  const addCart = async (goods) => {
+    const {skuId,count} = goods
+    console.log({skuId,count})
+    if(isLogin.value){
+      // 登录之后加入购物车逻辑
+     await postInsertCartAPI({skuId,count})
+     const res = await findNewCartListAPI()
+     cartList.value = res.result
+    } else {
     // 添加购物车操作
     // 已填加过 - count + newCount
     // 未添加过 - 直接push
@@ -22,6 +37,8 @@ export const useCartStore = defineStore('cart',() => {
       cartList.value.push(goods)
     }
   }
+    }
+    
   // delCart
   const delCart = (skuId) => {
     // 思路： 方法1、找到要删除项的下标值 - splice方法
@@ -55,6 +72,15 @@ export const useCartStore = defineStore('cart',() => {
     cartList.value.forEach((item) =>item.selected = selected)
   }
 
+  // 选中数
+  const selectedCount = computed(() => {
+    return cartList.value.filter((item) => item.selected).reduce((accumulation,currentValue) => accumulation + currentValue.count,0)
+  })
+  // 选中数总价
+  const selectedPrice = computed(() => {
+    return cartList.value.filter((item) => item.selected).reduce((accumulation,currentValue) => accumulation + currentValue.count * currentValue.price,0)
+  })
+
   return {
     cartList,
     addCart,
@@ -63,7 +89,9 @@ export const useCartStore = defineStore('cart',() => {
     totalPrice,
     singleCheck,
     isAll,
-    allCheck
+    allCheck,
+    selectedCount,
+    selectedPrice
   }
 },{
   persist:true   //保存至本地 （需安装pinia数据持久化插件）
