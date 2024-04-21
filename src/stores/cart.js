@@ -108,7 +108,8 @@ export const useCartStore = defineStore('cart',() => {
     allCheck,
     selectedCount,
     selectedPrice,
-    clearCart
+    clearCart,
+    updateNewList
   }
 },{
   persist:true   //保存至本地 （需安装pinia数据持久化插件）
