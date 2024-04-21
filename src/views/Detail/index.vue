@@ -410,4 +410,4 @@ onMounted(() => {
 .bread-container {
   padding: 25px 0;
 }
-</style>
+</style>@/stores/cartStore

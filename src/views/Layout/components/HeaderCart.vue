@@ -221,4 +221,4 @@ const cartStore = useCartStore()
     }
   }
 }
-</style>
+</style>@/stores/cartStore
