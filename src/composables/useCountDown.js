@@ -16,9 +16,9 @@ export const useCountDown = () => {
     // 开始倒计时的逻辑
     // 每隔1s 就减一
     // 定时器函数   (可能出现内存溢出)
-    formatTime.value = currentTime
-    setInterval(() => {
-      timer = formatTime.value--
+    time.value = currentTime
+    timer = setInterval(() => {
+      time.value--
     },1000)
   }
   // 组件销毁时清除定时器

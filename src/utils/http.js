@@ -8,7 +8,7 @@ const http = axios.create({
   // 基地址
   baseURL:'http://pcapi-xiaotuxian-front-devtest.itheima.net',
   // 超时时间
-  timeout:5000
+  timeout:20000
 })
 
 // 拦截器 (axios 官方文档)
@@ -30,6 +30,7 @@ http.interceptors.response.use(res => res.data, err => {
     const userStore = useUserStore()
   // 1、清除本地用户数据
   // 2、跳转至登录页
+  console.log(err)
   if(err.response.status === 401){
     userStore.clearUserInfo()
     router.replace({path:'/login'})

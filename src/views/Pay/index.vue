@@ -13,7 +13,7 @@ const getPayInfoData = async () => {
   const res = await getOrderAPI(route.query.id)
   payInfo.value = res.result
   // 初始化倒计时秒数
-  state(res.result.countdown)
+  state(payInfo.value.countdown)
 } 
 onMounted(() => getPayInfoData())
 
