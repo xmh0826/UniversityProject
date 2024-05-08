@@ -14,6 +14,7 @@ const http = axios.create({
 // 拦截器 (axios 官方文档)
 // axios请求拦截器
 http.interceptors.request.use(config => {
+  // config 请求的信息   需要返回，否则请求不会进行 
   // 1、 从 pinia 中 获取token数据
   const userStore = useUserStore()
   // 2、按照后端要求拼接token数据
